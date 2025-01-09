@@ -1,12 +1,15 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+package Taller_base;
+import javax.swing.*;
+import java.awt.*;
 public class Main {
     public static void main(String[] args) {
-        System.out.printf("Hello and welcome!");
-
-        for (int i = 1; i <= 5; i++) {
-
-            System.out.println("i = " + i);
-        }
+        System.out.println("Ejecutando Programa (°w°)");
+        JFrame frame = new JFrame("LOGIN");
+        frame.setContentPane(new Login(frame).LoginPanel);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(500,300);
+        frame.setPreferredSize(new Dimension(500,300));
+        frame.pack();
+        frame.setVisible(true);
     }
 }
