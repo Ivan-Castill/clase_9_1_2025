@@ -3,6 +3,10 @@ package Taller_base;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 public class Login {
     private JTextField Usuario;
@@ -14,22 +18,41 @@ public class Login {
         AccederButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String user= "";
-                String pass="";
                 //optener los datos
                 String usuarioIngresado = Usuario.getText();
                 String passwordIngresado = new String(passwordField1.getPassword());
                 // Validación de las credenciales
-                if (usuarioIngresado.equals(user) && passwordIngresado.equals(pass)) {
-                    JOptionPane.showMessageDialog(null, "BIENVENIDO\n"+user+"\n Inicio de sesión exitoso");
+                if (validarCredenciales(usuarioIngresado,passwordIngresado)){
+                    JOptionPane.showMessageDialog(null,"Bienvenido \n"+usuarioIngresado+"\n Inicio de sesion exitosa");
 
+                    //abre la siguiente pantalla
                     Banner banner = new Banner();
                     banner.visualizar();
                     parentFrame.dispose();
-                } else {
-                    JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
+                }else {
+                    JOptionPane.showMessageDialog(null,"Usuario o Contraseña incorrectos","ERROR",JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
+    }
+    //Metodo para validar las credenciales
+    private boolean validarCredenciales(String usuarioIngresado,String passwordIngresado){
+        //Datos de Conexion
+        String url = "jdbc:mysql://localhost:3307/consurso";
+        String user = "root";
+        String password = "1234";
+        String query = "SELECT CORREO,Pass FROM usuarios WHERE CORREO = ? AND Pass = ?";
+        try (Connection connection = DriverManager.getConnection(url,user,password)){
+            PreparedStatement statement=connection.prepareStatement(query);
+            statement.setString(1, usuarioIngresado);
+            statement.setString(2, passwordIngresado);
+            ResultSet resultSet=statement.executeQuery();
+
+            return resultSet.next();
+        }catch (Exception e){
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null,"Error al conectar con la base de datos","ERROR", JOptionPane.ERROR_MESSAGE);
+        }
+        return false;
     }
 }
